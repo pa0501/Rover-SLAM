@@ -35,11 +35,12 @@ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 # 要保证整个工程的opencv版本一致，包括dbow，源码以及ros相关的
 # 3 4 都可以正常运行//必须要opencv3.4.13,要不然会在加载词袋处卡住
 
-find_package(OpenCV 3.4.13 REQUIRED)
-   if(NOT OpenCV_FOUND)
-      message(FATAL_ERROR "OpenCV > 3.2 not found.")
-   endif()
-
+# find_package(OpenCV 3.4.13 REQUIRED)
+#   if(NOT OpenCV_FOUND)
+#      message(FATAL_ERROR "OpenCV > 3.2 not found.")
+#   endif()
+find_package(OpenCV REQUIRED)
+find_package(OpenCV 4.0 REQUIRED)
 
 MESSAGE("OPENCV VERSION:")
 MESSAGE(${OpenCV_VERSION})
@@ -60,7 +61,7 @@ ${PROJECT_SOURCE_DIR}/include
 ${PROJECT_SOURCE_DIR}/include/CameraModels
 ${PROJECT_SOURCE_DIR}/Thirdparty/Sophus
 ${EIGEN3_INCLUDE_DIR}
-/media/xiao/data3/learning-slam/onnxruntime-linux-x64-gpu-1.16.3/include
+/opt/onnxruntime-linux-x64-gpu-1.16.3/include
 ${CUDA_INCLUDE_DIRS}
 ${Boost_INCLUDE_DIRS}
 ${YAML_CPP_INCLUDE_DIR}
@@ -148,17 +149,23 @@ include/Matchers/transform.h
 include/Settings.h)
 
 add_subdirectory(Thirdparty/g2o)
+add_subdirectory(Thirdparty/DBoW3)
+add_library(DBoW3::DBoW3 ALIAS DBoW3)
+add_library(g2o::core ALIAS g2o)
 
 target_link_libraries(${PROJECT_NAME}
 ${CUDA_LIBRARIES}
 ${OpenCV_LIBS}
 ${EIGEN3_LIBS}
 ${Pangolin_LIBRARIES}
-${PROJECT_SOURCE_DIR}/Thirdparty/DBoW3/lib/libDBoW3.so
-${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
+#${PROJECT_SOURCE_DIR}/Thirdparty/DBoW3/lib/libDBoW3.so
+DBoW3::DBoW3
+#${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
+g2o::core
 -lboost_serialization
 -lcrypto
-/usr/local/lib/libonnxruntime.so
+#/usr/local/lib/libonnxruntime.so
+/opt/onnxruntime-linux-x64-gpu-1.16.3/lib/libonnxruntime.so
 )
 
 
