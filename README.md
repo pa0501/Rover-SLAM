@@ -1,26 +1,29 @@
 # A real-time, robust and versatile visual-SLAM framework based on deep learning networks
 
+*Forked project to deploy and test on a Jetson Orin Nano
+
 # Prerequisites
-We have tested the library in **Ubuntu 20.04**, with the following hardware and software configurations:
+WSL Setup: 
 
-- **CPU**: Intel Core i7-10700K
-- **GPU**: NVIDIA GeForce RTX 3080
-- **CUDA Version**: 11.8
+- **Ubuntu 22.04**
+- **CPU**: AMD Ryzen 5 3600
+- **GPU**: NVIDIA GeForce RTX 4070Super
+- **CUDA Version**: 12.4
 
+Jetson: Jetpack 6.2.1
 
 
 ## Pangolin
 We use [Pangolin](https://github.com/stevenlovegrove/Pangolin) for visualization and user interface. Dowload and install instructions can be found at: https://github.com/stevenlovegrove/Pangolin.
 
 ## OpenCV
-**Required at leat 3.0. Tested with OpenCV 3.4.1**.
+**Required at leat 4.0. Tested with OpenCV 4.11.
 
 ## Eigen3
 Required by g2o (see below). Download and install instructions can be found at: http://eigen.tuxfamily.org. **Required at least 3.1.0**.
 
 ## ONNXRuntime
 **Required onnxruntime-linux-x64-gpu-1.16.3** and Modify line 63 of the CmakeLists.txt to the current location of ONNXRuntime library.
-
 
 ## ROS (optional)
 
