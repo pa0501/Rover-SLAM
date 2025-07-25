@@ -944,12 +944,12 @@ void LocalMapping::CreateNewMapPoints()
          //cout<<"step4.5: "<<mlNewKeyFrames.size()<<endl;
     }
     
-    float matchmean = matchsum/vpNeighKFs.size();
+    //float matchmean = matchsum/vpNeighKFs.size();
 
     
-    mpTracker->lastmatchtrack = matchmean;
-    mpTracker->mpExtractorLeft->lastmatchnum = matchmean;
-    mpTracker->mpIniExtractor->lastmatchnum = matchmean;
+    //mpTracker->lastmatchtrack = matchmean;
+    //mpTracker->mpExtractorLeft->lastmatchnum = matchmean;
+    //mpTracker->mpIniExtractor->lastmatchnum = matchmean;
     
 }
 

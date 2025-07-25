@@ -35,12 +35,12 @@ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 # 要保证整个工程的opencv版本一致，包括dbow，源码以及ros相关的
 # 3 4 都可以正常运行//必须要opencv3.4.13,要不然会在加载词袋处卡住
 
-# find_package(OpenCV 3.4.13 REQUIRED)
-#   if(NOT OpenCV_FOUND)
-#      message(FATAL_ERROR "OpenCV > 3.2 not found.")
-#   endif()
-find_package(OpenCV REQUIRED)
-find_package(OpenCV 4.0 REQUIRED)
+find_package(OpenCV 3.4.13 REQUIRED)
+if(NOT OpenCV_FOUND)
+  message(FATAL_ERROR "OpenCV > 3.2 not found.")
+endif()
+#find_package(OpenCV REQUIRED)
+#find_package(OpenCV 4.0 REQUIRED)
 
 MESSAGE("OPENCV VERSION:")
 MESSAGE(${OpenCV_VERSION})

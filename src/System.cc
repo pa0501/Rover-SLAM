@@ -121,7 +121,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     bool loadedAtlas = false;
 
     if(mStrLoadAtlasFromFile.empty())
-    {
+    {   
         //Load ORB Vocabulary
         cout << endl << "Loading superpoint Vocabulary. This could take a while..." << endl;
 
@@ -620,7 +620,7 @@ void System::Shutdown()
 
     /*if(mpViewer)
         pangolin::BindToContext("ORB-SLAM2: Map Viewer");*/
-
+    mpTracker->OutputFETimes();
 #ifdef REGISTER_TIMES
     mpTracker->PrintTimeStats();
 #endif

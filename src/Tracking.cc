@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU General Public License along with ORB-SLAM3.
 * If not, see <http://www.gnu.org/licenses/>.
 */
-
+//#define REGISTER_TIMES
 
 #include "Tracking.h"
 
@@ -63,6 +63,8 @@ namespace ORB_SLAM3
  * @param settings 参数类
  * @param _strSeqName 序列名字，没用到
  */
+
+
 Tracking::Tracking(System *pSys, SPVocabulary* pVoc, FrameDrawer *pFrameDrawer, MapDrawer *pMapDrawer,
     Atlas *pAtlas, KeyFrameDatabase* pKFDB, const string &strSettingPath, const int sensor, Settings* settings, const string &_nameSeq)
     : mState(NO_IMAGES_YET), mSensor(sensor), mTrackedFr(0), mbStep(false),
@@ -118,6 +120,8 @@ Tracking::Tracking(System *pSys, SPVocabulary* pVoc, FrameDrawer *pFrameDrawer, 
         }
     }
 
+    
+
     initID = 0; lastID = 0;
     mbInitWith3KFs = false;
     mnNumDataset = 0;
@@ -141,6 +145,8 @@ Tracking::Tracking(System *pSys, SPVocabulary* pVoc, FrameDrawer *pFrameDrawer, 
             std::cout << " is unknown" << std::endl;
         }
     }
+
+    fe_times.clear();
 
 #ifdef REGISTER_TIMES
     vdRectStereo_ms.clear();
@@ -665,6 +671,29 @@ void Tracking::newParameterLoader(Settings *settings) {
     mpImuCalib = new IMU::Calib(Tbc,Ng*sf,Na*sf,Ngw/sf,Naw/sf);
 
     mpImuPreintegratedFromLastKF = new IMU::Preintegrated(IMU::Bias(),*mpImuCalib);
+}
+
+void Tracking::OutputFETimes(){   
+    if(fe_times.empty())
+    {
+        std::cout << "No feature extraction times recorded" << std::endl;
+        return;
+    }
+
+    double total_time = 0.0;
+    for(double time : fe_times)
+    {
+        total_time += time;
+    }
+    double average_time = total_time / fe_times.size();
+    double fps = 1000.0 / average_time;
+    std::cout << "Feature extraction times (ms):" << std::endl;
+    //for(size_t i = 0; i < fe_times.size(); ++i)
+    //{
+    //    std::cout << "Frame " << i + 1 << ": " << fe_times[i] << " ms" << std::endl;
+    //}
+    std::cout << "Average time: " << average_time << " ms" << std::endl;
+    std::cout << "FPS: " << fps << std::endl;
 }
 
 /**
@@ -1594,17 +1623,24 @@ Sophus::SE3f Tracking::GrabImageStereo(const cv::Mat &imRectLeft, const cv::Mat 
         mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpExtractorLeft,mpExtractorRight,mpSPVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,mpCamera2,mTlr);
     else if(mSensor == System::IMU_STEREO && !mpCamera2)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpExtractorLeft,mpExtractorRight,mpSPVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,&mLastFrame,*mpImuCalib);
-        
+        auto end = std::chrono::high_resolution_clock::now();
+        double fe_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        //cout << "fe time this frame: " << fe_time << endl;
+        fe_times.push_back(fe_time);
     }
         
     else if(mSensor == System::IMU_STEREO && mpCamera2)
     {
-
+        auto start = std::chrono::high_resolution_clock::now();
         mCurrentFrame = Frame(mImGray,imGrayRight,timestamp,mpExtractorLeft,mpExtractorRight,mpSPVocabulary,mK,mDistCoef,mbf,mThDepth,mpCamera,mpCamera2,mTlr,&mLastFrame,*mpImuCalib);
-        
+        auto end = std::chrono::high_resolution_clock::now();
+        double fe_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        //cout << "fe time this frame: " << fe_time << endl;
+        fe_times.push_back(fe_time);
     }
-        
+
 
     //cout << "Incoming frame ended" << endl;
 

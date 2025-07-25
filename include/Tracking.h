@@ -180,7 +180,10 @@ public:
     vector<MapPoint*> GetLocalMapMPS();
 
     bool mbWriteStats;
-
+    
+    std::vector<double> fe_times;
+    
+    void OutputFETimes();
 #ifdef REGISTER_TIMES
     void LocalMapStats2File();
     void TrackStats2File();
@@ -365,7 +368,7 @@ protected:
     Sophus::SE3f mTlr;
 
     void newParameterLoader(Settings* settings);
-
+    
 #ifdef REGISTER_LOOP
     bool Stop();
 

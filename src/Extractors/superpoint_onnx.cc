@@ -189,7 +189,7 @@ void SuperPointOnnxRunner::Extractor_PostProcess(Configuration cfg , std::vector
         
         float threshold = 0;
         
-        bool adaptivethresold = false;
+        bool adaptivethresold = true;
         if(adaptivethresold)
         {
             float sum = 0;
